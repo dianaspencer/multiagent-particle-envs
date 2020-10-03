@@ -2,12 +2,13 @@
 import argparse
 import os
 import sys
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
+
 import multiagent.scenarios as scenarios
 
 from multiagent.environment import MultiAgentEnv
 from multiagent.policy import InteractivePolicy
 
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=None)
