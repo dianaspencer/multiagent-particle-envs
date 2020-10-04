@@ -14,7 +14,7 @@ class Scenario(BaseScenario):
         num_adversaries = 1
         num_landmarks = num_agents - 1
         # add agents
-        world.agents = [Agent() for i in range(num_agents)]
+        world.agents = [Agent() for _ in range(num_agents)]
         for i, agent in enumerate(world.agents):
             agent.name = 'agent %d' % i
             agent.collide = False
@@ -22,7 +22,7 @@ class Scenario(BaseScenario):
             agent.adversary = True if i < num_adversaries else False
             agent.size = 0.15
         # add landmarks
-        world.landmarks = [Landmark() for i in range(num_landmarks)]
+        world.landmarks = [Landmark() for _ in range(num_landmarks)]
         for i, landmark in enumerate(world.landmarks):
             landmark.name = 'landmark %d' % i
             landmark.collide = False
@@ -117,7 +117,6 @@ class Scenario(BaseScenario):
                 adv_rew += 5
             return adv_rew
 
-
     def observation(self, agent, world):
         # get positions of all entities in this agent's reference frame
         entity_pos = []
@@ -130,7 +129,8 @@ class Scenario(BaseScenario):
         # communication of all other agents
         other_pos = []
         for other in world.agents:
-            if other is agent: continue
+            if other is agent:
+                continue
             other_pos.append(other.state.p_pos - agent.state.p_pos)
 
         if not agent.adversary:

@@ -3,6 +3,7 @@ from gym import spaces
 from gym.envs.registration import EnvSpec
 import numpy as np
 from multiagent.multi_discrete import MultiDiscrete
+from multiagent.rendering import Viewer, make_circle, Transform
 
 
 # environment for all agents in the multiagent world
@@ -162,10 +163,14 @@ class MultiAgentEnv(gym.Env):
             if self.discrete_action_input:
                 agent.action.u = np.zeros(self.world.dim_p)
                 # process discrete action
-                if action[0] == 1: agent.action.u[0] = -1.0
-                if action[0] == 2: agent.action.u[0] = +1.0
-                if action[0] == 3: agent.action.u[1] = -1.0
-                if action[0] == 4: agent.action.u[1] = +1.0
+                if action[0] == 1:
+                    agent.action.u[0] = -1.0
+                if action[0] == 2:
+                    agent.action.u[0] = +1.0
+                if action[0] == 3:
+                    agent.action.u[1] = -1.0
+                if action[0] == 4:
+                    agent.action.u[1] = +1.0
             else:
                 if self.force_discrete_action:
                     d = np.argmax(action[0])
@@ -217,20 +222,20 @@ class MultiAgentEnv(gym.Env):
             # create viewers (if necessary)
             if self.viewers[i] is None:
                 # import rendering only if we need it (and don't import for headless machines)
-                #from gym.envs.classic_control import rendering
-                from multiagent import rendering
-                self.viewers[i] = rendering.Viewer(700,700)
+                # from gym.envs.classic_control import rendering
+                # from multiagent import rendering (TODO uncomment this line)
+                self.viewers[i] = Viewer(700, 700)
 
         # create rendering geometry
         if self.render_geoms is None:
             # import rendering only if we need it (and don't import for headless machines)
-            #from gym.envs.classic_control import rendering
-            from multiagent import rendering
+            # from gym.envs.classic_control import rendering
+            # from multiagent import rendering (TODO uncomment this line)
             self.render_geoms = []
             self.render_geoms_xform = []
             for entity in self.world.entities:
-                geom = rendering.make_circle(entity.size)
-                xform = rendering.Transform()
+                geom = make_circle(entity.size)
+                xform = Transform()
                 if 'agent' in entity.name:
                     geom.set_color(*entity.color, alpha=0.5)
                 else:
@@ -289,7 +294,7 @@ class MultiAgentEnv(gym.Env):
 class BatchMultiAgentEnv(gym.Env):
     metadata = {
         'runtime.vectorized': True,
-        'render.modes' : ['human', 'rgb_array']
+        'render.modes': ['human', 'rgb_array']
     }
 
     def __init__(self, env_batch):
@@ -328,7 +333,7 @@ class BatchMultiAgentEnv(gym.Env):
             obs_n += env.reset()
         return obs_n
 
-    # render environment
+    # Render environment
     def render(self, mode='human', close=True):
         results_n = []
         for env in self.env_batch:
